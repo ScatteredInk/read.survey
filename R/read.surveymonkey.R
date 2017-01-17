@@ -8,13 +8,13 @@
 #' @keywords 'Surveymonkey'
 #' @export
 #' @examples 
-#' download.file('http://help.surveymonkey.com/servlet/servlet.FileDownload?file=01530000002hfBp', 'test.xlsx', method = 'curl') # Surveymonkey example export file
-#' data <- read.surveymonkey('test.xlsx', convert = TRUE)
+#' download.file('https://help.surveymonkey.com/servlet/servlet.FileDownload?file=01530000002hfBp', 'test.xls', method = 'curl') # Surveymonkey example export file
+#' data <- read.surveymonkey('test.xls')
 
 read.surveymonkey <- function(filename, format = 'xlsx', convert = FALSE){
   if (format == 'xlsx'){
-    library(xlsx)
-    data <- read.xlsx(filename, 1)
+    library(readxl)
+    data <- read_excel(filename, 1)
   }
   else if (format == 'csv') {
     data <- read.csv(filename)
@@ -24,7 +24,7 @@ read.surveymonkey <- function(filename, format = 'xlsx', convert = FALSE){
   }
   prefix <- ''
   for (i in 1:length(names(data))){
-    if (substr(names(data)[i],1,2) == 'NA'){
+    if (is.na(substr(names(data)[i],1,2))){
       if(prefix == ''){
         prefix <- names(data)[i-1]
         names(data)[i-1] <- paste(prefix, data[1,i-1], sep = '_')        
